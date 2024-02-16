@@ -1,0 +1,26 @@
+import fitz  # PyMuPDF
+
+def buscar_informacoes(pdf_path):
+    doc = fitz.open(pdf_path)
+    informacoes_encontradas = []
+
+    for page_num in range(doc.page_count):
+        page = doc[page_num]
+        text = page.get_text("text")
+
+        for linha in text.split('\n'):
+            # Condição para buscar pelo nome
+            if "Nome:" in linha and "Samuel Ferreira de Campos" in linha:
+                nome = linha.split(":")[1].strip()
+                informacoes_encontradas.append({"Tipo": "Nome", "Valor": nome})
+            # Condição para buscar pelo número de RF
+            elif "Número RF:" in linha and "8346178" in linha:
+                numero_rf = linha.split(":")[1].strip()
+                informacoes_encontradas.append({"Tipo": "Número RF", "Valor": numero_rf})
+
+    doc.close()
+    return informacoes_encontradas
+
+# Exemplo de uso
+resultado_pesquisa = buscar_informacoes("caminho/do/seu/arquivo.pdf")
+print(resultado_pesquisa)
